@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <title>Code Example</title>
+  </head>
+  <body>
+<pre><code>
+table = {}
+import pandas as pd
+nonterminals=['E', 'X', 'T', 'Y', 'F']
+terminals=['i', '+', '*', '(', ')', '$']
+for nonterm in nonterminals:
+    table[nonterm] = {}
+    for term in terminals:
+        table[nonterm][term] = None
+
+def table1():
+    for lhs,rhs in zip(lhs1,rhs1):
+        first=first_sets[rhs[0]]
+
+        for ter in first:
+            if ter != "@":
+                table[lhs][ter]=str(lhs+"->"+rhs)
+            else:
+                follow = follow_sets[lhs]
+                for fol in follow:
+                    table[lhs][fol]=str(lhs+"->@")
+
+
+    return table
+productions={'E': ['TX'], 'X': ['+TX', '@'], 'T': ['FY'], 'Y': ['*FY', '@'], 'F': ['(E)', 'i']}
+first_sets={'E': {'i', '('}, 'X': {'+', '@'}, 'T': {'i', '('}, 'Y': {'@', '*'}, 'F': {'i', '('}, '+':{'+'}, '*':{'*'},"(":{"("},")":{")"},"i":{"i"},"@":{"@"}}
+follow_sets={'E': {')', '$'}, 'X': {')', '$'}, 'T': {')', '$', '+'}, 'Y': {')', '$', '+'}, 'F': {'*', ')', '$', '+'}}
+lhs1=['E','X','X','T','Y','Y','F','F']
+rhs1=['TX','+TX', '@','FY','*FY', '@','(E)', 'i']
+x=table1()
+y=0
+df = pd.DataFrame(x)
+z=0
+print(df.T)
+
+</pre></code>
+<body>
+</html>

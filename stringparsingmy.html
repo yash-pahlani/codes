@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <title>Code Example</title>
+  </head>
+  <body>
+
+<pre><code>
+parsingtable = {"E": {"id": "T.E'", "+": "", "*": "", "(": "T.E'", ")": "", "$": ""},
+                    "E'": {"id": "", "+": "+.T.E'", "*": "", "(": "", ")": "@", "$": "@"},
+                    "T": {"id": "F.T'", "+": "", "*": "", "(": "F.T'", ")": "", "$": ""},
+                    "T'": {"id": "", "+": "@", "*": "*.F.T'", "(": "", ")": "@", "$": "@"},
+                    "F": {"id": "id", "+": "", "*": "", "(": "(.E.)", ")": "", "$": ""}}
+
+terminals = ["id,+,*,(,),$"]
+start_state = "E"
+sentence="id.*.id.+.id.$"
+def print_iter(Matched, Stack, Input, Action):
+        print(".".join(Matched).ljust(30), " | ", ".".join(Stack).ljust(25), " | ", ".".join(Input).ljust(30), " | ",
+              Action)
+stack=[start_state,"$"]
+input=sentence.split(".")
+action="Initial"
+match=[]
+print_iter(["Matched"],["Stack"],["Input"],"Action")
+print_iter(match,stack,input,action)
+status="NotAccepted"
+
+x=True
+while True:
+    stacktop=stack[0]
+    inptop=input[0]
+    if stacktop==inptop=="$":
+        status="Accepted"
+        break
+    elif stacktop==inptop!="$":
+        match.append(stacktop)
+        del(stack[0])
+        del(input[0])
+        action="Pop"
+    elif stacktop=="@":
+        del (stack[0])
+    else:
+        try:
+            production=parsingtable[stacktop][inptop]
+        except:
+            print("error for " + str(stacktop) + " on " + str(inptop), "Not Accepted")
+            break
+        new =production.split(".")
+        stack=new + stack[1:]
+        action=stacktop + "->" + production
+    print_iter(match, stack, input, action)
+
+print(status)
+</pre></code>
+</body>
+</html>
+

@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <title>Code Example</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+<pre><code>
+
+
+%{
+    int count_printf = 0;
+    int count_scanf = 0;
+%}
+
+%%
+printf     { count_printf++; }
+scanf      { count_scanf++; }
+%%
+
+int main(int argc,char** argv) {
+if(argc>1){
+	FILE 	*file;
+	file = fopen(argv[1],"r");
+	if(!file)
+	{
+		fprintf(stderr,"Could not Open %s\n",argv[1]);
+		exit(1);
+	}
+	yyin=file;
+	}
+    yylex();
+    printf("Number of printf statements: %d\nNumber of scanf statements: %d\n", count_printf,count_scanf);
+    return 0;
+}
+int yywrap()
+{
+return 1;
+}
+</pre></code>
+</body>
+</html>
+

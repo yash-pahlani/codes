@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <title>Code Example</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+<pre><code>
+
+
+%{
+    #include <stdio.h>
+    int count_verb = 0;
+    int count_adj = 0;
+    int count_adv = 0;
+    int count_other = 0;
+%}
+
+%%
+
+(is|am|are|was|were|been|being|have|has|had|do|does|did|shall|will|should|would|may|might|must|can|could) { count_verb++; }
+([A-Za-z]+ly) { count_adv++; }
+([A-Za-z]+ish) { count_adj++; }
+([A-Za-z]+able) { count_adj++; }
+([A-Za-z]+ful) { count_adj++; }
+([A-Za-z]+less) { count_adj++; }
+([A-Za-z]+ing) { count_other++; }
+([A-Za-z]+ed) { count_other++; }
+([A-Za-z]+s) { count_other++; }
+([A-Za-z]+) { count_other++; }
+
+%%
+
+int main() {
+    yylex();
+    printf("Number of verbs: %d\n", count_verb);
+    printf("Number of adjectives: %d\n", count_adj);
+    printf("Number of adverbs: %d\n", count_adv);
+    printf("Number of other types of words: %d\n", count_other);
+    return 0;
+}
+
+int yywrap()
+{
+
+return 1 ;}
+</pre></code>
+</body>
+<html>

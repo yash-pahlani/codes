@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <title>Code Example</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+<pre><code>
+import re
+
+f2=open('input.txt','r')
+x=f2.read()
+
+keywords=['auto','break','case','char','const','continue','default','do','double','else','enum','extern','float','for','goto','if','int','long','register','return','short','signed','sizeof','static','struct','switch','typedef','union','unsigned','void','volatile','while']
+
+built_in_functions=['clrscr(','printf(','scanf(','getch(','main(']
+
+operators=['+','-','*','/','%','==','!=','>','<','>=','<=','&&','||','|','&','!','^','~','>>','<<','=','+=','-=','*=']
+
+specialsymbol=['@','#','$','_','!']
+
+seperator=[',',':',';','\n','\t','{','}','(',')','[',']']
+
+splitcode=x.split();
+
+keywords_op=[]
+operators_op=[]
+predef_op=[]
+specialsymbols_op=[]
+seperators_op=[]
+identifiers_op=[]
+
+for word in splitcode:
+	if word in keywords:
+		keywords_op.append(word)
+	elif word in operators:
+		operators_op.append(word)
+	elif word in specialsymbol:
+		specialsymbols_op.append(word)
+	elif word in built_in_functions:
+		predef_op.append(word)
+	elif word in seperator:
+		seperators_op.append(word)
+	elif re.match(r'(#include).*',word):
+		predef_op.append(word)
+	elif re.match(r"[a-z A-Z_]\w*",word[0]):
+		identifiers_op.append(word)
+
+print("Keywords--->",keywords_op,'\n')
+print("Operators--->",operators_op,'\n')
+print("Predefined--->",predef_op,'\n')
+print("Special Symbol--->",specialsymbols_op,'\n')
+print("Seperators--->",seperators_op,'\n')
+print("Identifier--->",identifiers_op,'\n')
+</pre></code>
+</body>
+</html>
+
+
+
+
+
+

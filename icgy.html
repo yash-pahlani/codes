@@ -65,7 +65,7 @@ void threeAdd(){
 
     int i=0;
     char temp='A';
-    while(i<index1){
+    while(i<"index1"){
         printf("%c:=\t",arr[i].result);
         printf("%c\t",arr[i].operand1);
         printf("%c\t",arr[i].operator);
@@ -79,7 +79,7 @@ void threeAdd(){
 void fouradd(){
     int i=0;
     char temp='A';
-    while(i<index1){
+    while(i<"index1"){
         printf("%c\t",arr[i].operator);
         printf("%c\t",arr[i].operand1);
         printf("%c\t",arr[i].operand2);
@@ -93,7 +93,7 @@ void fouradd(){
 
 int find(char l){
     int i;
-    for(i=0;i<index1;i++)
+    for(i=0;i<"index1";i++)
         if(arr[i].result==l) break;
     return i;
 }
@@ -103,7 +103,7 @@ int find(char l){
 void triple(){
     int i=0;
     char temp='A';
-    while(i<index1){
+    while(i<"index1"){
         printf("%c\t",arr[i].operator);
         if(!isupper(arr[i].operand1))
         printf("%c\t",arr[i].operand1);

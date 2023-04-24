@@ -1,0 +1,97 @@
+<html>
+  <head>
+    <title>Code Example</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+<pre><code>
+# function to compute First set
+def compute_first(grammar, symbol):
+    first_set = set()
+
+    # base case: symbol is a terminal
+    if symbol not in grammar:
+        first_set.add(symbol)
+        return first_set
+
+    # recursive case: symbol is a nonterminal
+    productions = grammar[symbol]
+
+    for production in productions:
+        first_symbol = production[0]
+
+        # epsilon production
+        if first_symbol == '':
+            first_set.add('')
+
+        # non-epsilon production
+        else:
+            first_set |= compute_first(grammar, first_symbol)
+
+    return first_set
+
+# function to compute Follow set
+# function to compute Follow set
+def compute_follow(grammar, start_symbol, symbol, visited=set()):
+    follow_set = set()
+
+    if symbol == start_symbol:
+        follow_set.add('$')
+
+    # search through all productions for symbol
+    for head, body in grammar.items():
+        for prod in body:
+            try:
+                index = prod.index(symbol)
+            except ValueError:
+                continue
+
+            # symbol is last in the production
+            if index == len(prod) - 1:
+                if head not in visited:
+                    visited.add(head)
+                    follow_set |= compute_follow(grammar, start_symbol, head, visited)
+
+            # symbol is followed by a non-epsilon symbol
+            else:
+                next_symbol = prod[index+1]
+
+                # add First(next_symbol) to Follow(symbol)
+                follow_set |= compute_first(grammar, next_symbol)
+
+                # if epsilon is in First(next_symbol), add Follow(head) to Follow(symbol)
+                if '' in compute_first(grammar, next_symbol):
+                    if head not in visited:
+                        visited.add(head)
+                        follow_set |= compute_follow(grammar, start_symbol, head, visited)
+
+    return follow_set
+
+# example usage
+grammar = {}
+
+# get grammar rules from user input
+n = int(input("Enter the number of production rules: "))
+for i in range(n):
+    prod = input(f"Enter production rule {i+1}: ")
+    head, body = prod.split('->')
+    body = body.strip().split('|')
+    grammar[head.strip()] = [b.strip() for b in body]
+
+start_symbol = input("Enter the start symbol: ")
+
+# compute First and Follow sets for each symbol in the grammar
+first_sets = {}
+follow_sets = {}
+
+for symbol in grammar:
+    first_sets[symbol] = compute_first(grammar, symbol)
+    follow_sets[symbol] = compute_follow(grammar, start_symbol, symbol)
+
+# print First and Follow sets for each symbol in the grammar
+for symbol in grammar:
+    print(f"First({symbol}) = {first_sets[symbol]}")
+    print(f"Follow({symbol}) = {follow_sets[symbol]}\n")
+</pre></code>
+</body>
+</html>

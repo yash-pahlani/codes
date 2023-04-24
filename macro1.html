@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <title>Code Example</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+<pre><code>
+import java.util.*;
+public class PassOneAssembler {
+ public static int evaluateOperand(String operand, Map<String, Integer> symtab) throws IllegalArgumentException {
+if (symtab.containsKey(operand)) { return symtab.get(operand); } else if (operand.matches("\\d+")) {
+ return Integer.parseInt(operand);
+ } else {
+ throw new IllegalArgumentException("Invalid operand: " + operand);
+ }
+}
+public static void main(String[] args) {
+ String assemblyCode = "START 10\n(LOOP) MOV A, #5\nMOV B, #7\nADD A, B\nJMP LOOP\nEND";
+System.out.println("ASSEMBLY CODE: ");
+ System.out.println(assemblyCode + "\n");
+ HashMap<String, Integer> symtab = new HashMap<>();
+ HashMap<String, HashMap<String, Object>> littab = new HashMap<>();
+ArrayList<Integer> pooltab = new ArrayList<>(Arrays.asList(0));
+ Scanner inputScanner = new Scanner(System.in);
+ HashMap<String, String> opcodeTable = new HashMap<>();
+while (true) {
+ System.out.print("Enter an opcode mnemonic (or 'done' to finish): ");
+ String opcode = inputScanner.nextLine();
+ if (opcode.equals("done")) {
+break; }
+ System.out.print("Enter the corresponding opcode value: ");
+ String value = inputScanner.nextLine();
+opcodeTable.put(opcode, value);
+ }
+ Integer locationCounter = null;
+ String[] lines = assemblyCode.split("\n");
+System.out.println("\nOPTAB:");
+ for (String opcode : opcodeTable.keySet()) {
+ System.out.println(opcode + " " + opcodeTable.get(opcode));
+ }
+ System.out.println("\nIntermediate code");
+for (int i = 0; i < lines.length; i++) {
+ String line = lines[i].split("//")[0].trim();
+if (line.isEmpty()) {
+ continue;
+ }
+ if (line.startsWith("(")) {
+ String symbol = line.substring(1, line.indexOf(")"));
+symtab.put(symbol, locationCounter); continue;
+ }
+ if (line.startsWith("\"") && line.endsWith("\"")) {
+String literal = line.substring(1, line.length() - 1);
+ if (!littab.containsKey(literal)) {
+ HashMap<String, Object> literalMap = new HashMap<>();
+literalMap.put("value", literal); literalMap.put("address",
+null); littab.put(literal, literalMap);
+ }
+ continue;
+ }
+ String[] parts = line.split("\\s+");
+ String opcode = parts[0]; 
+String operand = parts.length == 1 ? null : String.join(" ", Arrays.copyOfRange(parts, 1, parts.length));
+if (opcode.equals("START")) {
+ locationCounter = Integer.parseInt(operand);
+ } else if (opcode.equals("ORIGIN")) {
+ locationCounter = evaluateOperand(operand, symtab);
+ } else if (opcode.equals("LTORG")) {
+ pooltab.add(littab.size());
+ for (HashMap<String, Object> literalMap : littab.values()) {
+ if (literalMap.get("address") == null) {
+literalMap.put("address", locationCounter);
+locationCounter++;
+ }
+ }
+ } else {
+ locationCounter++;
+ }
+ System.out.printf("%d\t%s\t%s\t%d\n", i + 1, opcode, operand, locationCounter);
+ }
+System.out.println("\nSymbol Table: "+symtab);
+System.out.println("Literal Table: "+littab);
+System.out.println("Pool Table: "+pooltab);
+}
+} 
+</pre></code>
+</body>
+</html>
